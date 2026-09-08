@@ -64,7 +64,7 @@ public class TestOldestProcedureMetrics {
     ServerCrashProcedure finished = mock(ServerCrashProcedure.class);
 
     when(master.getMasterProcedureExecutor()).thenReturn(procedureExecutor);
-    when(procedureExecutor.getActiveProceduresNoCopy())
+    when(procedureExecutor.getProcedures())
       .thenReturn(List.of(oldestLock, newerLock, serverCrash, finished));
     when(oldestLock.getSubmittedTime()).thenReturn(1_000L);
     when(newerLock.getSubmittedTime()).thenReturn(4_000L);
@@ -83,10 +83,10 @@ public class TestOldestProcedureMetrics {
     METRICS_HELPER.assertGauge(
       MetricsMasterProcSource.OLDEST_PROCEDURE_AGE_NAME + "_ServerCrashProcedure", 8_000L, source);
 
-    when(procedureExecutor.getActiveProceduresNoCopy()).thenReturn(List.of());
+    when(procedureExecutor.getProcedures()).thenReturn(List.of());
     assertEquals(Map.of(), wrapper.getOldestProcedureAgeByType());
 
-    when(procedureExecutor.getActiveProceduresNoCopy()).thenReturn(List.of(newerLock));
+    when(procedureExecutor.getProcedures()).thenReturn(List.of(newerLock));
     when(newerLock.getSubmittedTime()).thenReturn(11_000L);
     assertEquals(Map.of("LockProcedure", 0L), wrapper.getOldestProcedureAgeByType());
 

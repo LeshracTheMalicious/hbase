@@ -192,7 +192,7 @@ public class MetricsMasterWrapperImpl implements MetricsMasterWrapper {
     }
     long now = EnvironmentEdgeManager.currentTime();
     Map<String, Long> oldestProcedureAgeByType = new HashMap<>();
-    for (Procedure<MasterProcedureEnv> procedure : procedureExecutor.getActiveProceduresNoCopy()) {
+    for (Procedure<MasterProcedureEnv> procedure : procedureExecutor.getProcedures()) {
       if (!procedure.isFinished()) {
         long age = Math.max(0L, now - procedure.getSubmittedTime());
         oldestProcedureAgeByType.merge(procedure.getClass().getSimpleName(), age, Math::max);
